@@ -1,0 +1,31 @@
+language: generic
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      env: BUILDARCH=x64
+
+before_install:
+  - sudo apt-get install desktop-file-utils zsync
+
+script:
+  - wget -nv -c https://github.com/AppImage/pkg2appimage/releases/download/continuous/pkg2appimage-continuous-x86_64.AppImage
+  - wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+  - ./build.sh
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  overwrite: true
+  api_key: $GITHUB_TOKEN
+  file_glob: true
+
+after_success:
+  - ls -lh out/* # Assuming you have some files in out/ that you would like to upload
+  - wget -nv -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh out/*
+
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)$/
