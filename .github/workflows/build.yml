@@ -43,3 +43,9 @@ jobs:
         tag_name: continuous
         release_name: Continuous build
         prerelease: true
+        
+    - name: Upload AppImage to Release
+      run: |
+        ls -lh out/* # Assuming you have some files in out/ that you would like to upload
+        wget -nv -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+        bash upload.sh out/*
