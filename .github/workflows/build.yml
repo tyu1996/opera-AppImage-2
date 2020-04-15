@@ -29,4 +29,7 @@ jobs:
         wget -nv -c https://github.com/AppImage/pkg2appimage/releases/download/continuous/pkg2appimage-continuous-x86_64.AppImage
         wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         ./build.sh
-        
+    
+    - name: Set environment upon finished build
+      env:
+        status: Done
