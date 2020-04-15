@@ -20,7 +20,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@master
       
     # Runs a single command using the runners shell
     - name: Install required dependencies
@@ -32,7 +32,14 @@ jobs:
         wget -nv -c https://github.com/AppImage/pkg2appimage/releases/download/continuous/pkg2appimage-continuous-x86_64.AppImage
         wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         ./build.sh
-    
-    - name: Set environment upon finished build
+        
+    # The following ref: https://github.com/actions/create-release
+    - name: Create Release
+      uses: actions/create-release@latest
       env:
-        status: Done
+        # The token is provided by Actions, you do not need to create your own token
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: continuous
+        release_name: Continuous build
+        prerelease: true
