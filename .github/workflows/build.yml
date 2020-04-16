@@ -32,21 +32,14 @@ jobs:
         wget -nv -c https://github.com/AppImage/pkg2appimage/releases/download/continuous/pkg2appimage-continuous-x86_64.AppImage
         wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         ./build.sh
-    
-    # The following ref: https://github.com/actions/create-release
+      
+    # Ref: https://github.com/ncipollo/release-action
     - name: Create Release
-      uses: actions/create-release@latest
-      env:
-        # The token is provided by Actions, you do not need to create your own token
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: continuous
-        release_name: Continuous build
-        prerelease: true
-        
-    - name: Upload Artifacts to Release
-      uses: Roang-zero1/github-upload-release-artifacts-action@master
-      with:
-        args: out/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        allowUpdates: True
+        tag: continuous
+        name: Continuous build
+        prerelease: True
+        artifacts: "out/*"
+        token: ${{ secrets.GITHUB_TOKEN }}
