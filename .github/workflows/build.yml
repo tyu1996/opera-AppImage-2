@@ -32,7 +32,13 @@ jobs:
         wget -nv -c https://github.com/AppImage/pkg2appimage/releases/download/continuous/pkg2appimage-continuous-x86_64.AppImage
         wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         ./build.sh
-        
+  
+  release:
+    runs-on: ubuntu-16.04
+    needs: build
+    steps:
+    - uses: actions/checkout@master
+    
     # The following ref: https://github.com/actions/create-release
     - name: Create Release
       uses: actions/create-release@latest
@@ -44,8 +50,9 @@ jobs:
         release_name: Continuous build
         prerelease: true
         
-    - name: Upload AppImage to Release
-      run: |
-        ls -lh out/* # Assuming you have some files in out/ that you would like to upload
-        wget -nv -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-        bash upload.sh out/*
+    - name: Upload Artifacts to Release
+      uses: Roang-zero1/github-upload-release-artifacts-action@master
+      with:
+        args: out/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
